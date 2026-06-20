@@ -18,10 +18,13 @@ body {
   margin: 0;
   font-family: "Segoe UI", system-ui, sans-serif;
   background: radial-gradient(circle at 50% 30%, var(--felt), var(--felt-dark));
+  background-attachment: fixed;
   color: #fff;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 header {
@@ -29,6 +32,9 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 5px 16px;
+  padding-top: calc(5px + env(safe-area-inset-top));
+  padding-left: calc(16px + env(safe-area-inset-left));
+  padding-right: calc(16px + env(safe-area-inset-right));
   background: rgba(0, 0, 0, 0.35);
   flex-wrap: wrap;
   gap: 8px;
