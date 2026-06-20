@@ -201,7 +201,7 @@ function startRound(state) {
   state.roundComplete = false;
   state.lastResult = null;
 
-  log(state, `— Turno #${state.roundNumber} (${state.cardsThisRound} carte). ` +
+  log(state, `— Turno ${state.roundNumber} (${state.cardsThisRound} carte). ` +
     `Mazziere: ${state.players[state.dealer].name}.`);
   return state;
 }
