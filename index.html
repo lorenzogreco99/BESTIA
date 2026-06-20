@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bestia — gioco di carte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>BESTIA 🐗</h1>
+    <div id="info"></div>
+  </header>
+
+  <section id="setup">
+    <h2>Nuova partita</h2>
+    <div class="setup-row"><span>Il tuo nome</span><input id="player-name" class="setup-input" type="text" value="Giocatore" maxlength="16"></div>
+    <div class="setup-row"><span>Giocatori</span><div id="setup-players" class="opts"></div></div>
+    <div class="setup-row"><span>Carte iniziali</span><div id="setup-cards" class="opts"></div></div>
+    <div class="setup-row"><span>Vite iniziali</span><div id="setup-lives" class="opts"></div></div>
+    <div class="setup-actions">
+      <button id="setup-start">▶ Gioca solo</button>
+      <button id="setup-create" class="secondary">🌐 Crea stanza</button>
+    </div>
+    <div class="setup-row" style="margin-top:6px">
+      <input id="room-code-input" class="setup-input" type="text" placeholder="Codice stanza" maxlength="4">
+      <button id="btn-join">Unisciti</button>
+    </div>
+    <p id="setup-note"></p>
+  </section>
+
+  <section id="waiting" class="hidden">
+    <h2>Stanza: <span id="room-code-display">----</span></h2>
+    <p id="waiting-setup" style="color:var(--gold);font-size:13px;margin:4px 0 12px"></p>
+    <div id="waiting-players"></div>
+    <p id="waiting-note">In attesa…</p>
+    <button id="btn-start-room">▶ Inizia partita</button>
+    <button id="btn-leave" class="secondary" style="margin-top:8px">← Menu</button>
+  </section>
+
+  <div id="game" class="hidden">
+    <main id="table">
+      <div id="opponents"></div>
+
+      <div id="center">
+        <div id="roundinfo"></div>
+        <div id="trick"></div>
+        <div id="trick-popup"></div>
+        <div id="actions"></div>
+      </div>
+
+      <div id="banner"></div>
+
+      <div id="me">
+        <div id="myinfo"></div>
+        
+        <div id="myhand"></div>
+      </div>
+    </main>
+
+    <div id="log"></div>
+    <div id="countdown-popup"></div>
+  </div>
+
+  <footer>
+    <details>
+      <summary>Regole di questa versione</summary>
+      <p>
+        Si parte con <b>N vite</b>. I turni hanno carte calanti (dal numero
+        scelto a inizio partita giù fino a 1), poi si ricomincia; il mazziere
+        ruota a ogni turno.
+        Dopo la distribuzione, partendo dal mazziere, ognuno dichiara
+        <b>quante mani pensa di prendere</b>. <i>Vietato pareggiare</i>:
+        l'ultimo non può far sì che la somma delle dichiarazioni sia uguale al
+        numero di mani del turno.
+        Prende la mano la carta più forte: conta <b>prima il seme</b>
+        (oro&nbsp;>&nbsp;coppe&nbsp;>&nbsp;spade&nbsp;>&nbsp;bastoni) e poi il
+        <b>valore</b> (1…7, Donna=8, Cavallo=9, Re=10). Apre il mazziere; chi
+        prende una mano apre la successiva.
+        L'<b>Asso d'oro è un jolly</b>: quando lo giochi scegli se vale il
+        <b>massimo</b> (batte tutto) o il <b>minimo</b> (perde con tutto).
+        A fine turno si perdono <b>|dichiarate − prese|</b> vite. A 0 vite si è
+        eliminati: vince l'ultimo rimasto.
+      </p>
+      <p>Semi: <b>O</b>=oro, <b>C</b>=coppe, <b>S</b>=spade, <b>B</b>=bastoni.</p>
+    </details>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+  <script src="ui.js"></script>
+</body>
+</html>

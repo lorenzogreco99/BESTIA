@@ -1,0 +1,392 @@
+:root {
+  --felt: #0b6b3a;
+  --felt-dark: #08542d;
+  --gold: #f1c40f;
+  --ink: #1a1a1a;
+
+  /* dimensioni carte proporzionali alla pagina: si rimpiccioliscono in base
+     al MINORE tra larghezza e altezza, così entra sempre tutto a schermo */
+  --card-ar: 1324 / 2188;                              /* proporzione reale */
+  --card-w: clamp(72px, min(13vw, 22vh), 140px);       /* carte in mano e sul tavolo */
+  --card-mid: clamp(32px, min(8vw, 13vh), 60px);        /* avversarie scoperte (alla cieca) */
+  --card-back: clamp(22px, min(5vw, 8vh), 44px);        /* dorsi degli avversari */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(circle at 50% 30%, var(--felt), var(--felt-dark));
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(15px, 4vw, 21px);
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+
+#info { font-size: 14px; opacity: 0.95; }
+#info b { color: var(--gold); }
+
+.hidden { display: none !important; }
+
+/* schermata di setup */
+#setup {
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  text-align: center;
+  overflow: auto;
+}
+#setup h2 { color: var(--gold); margin-top: 0; }
+.setup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0;
+}
+.setup-row > span { font-size: 16px; min-width: 110px; text-align: left; }
+.opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.optbtn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  min-width: 42px;
+  padding: 10px 0;
+  border-radius: 8px;
+}
+.optbtn.selected { background: var(--gold); color: var(--ink); }
+
+/* stepper +/− */
+.opts { align-items: center; }
+.stepbtn {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepbtn:hover { background: rgba(255,255,255,0.28); }
+.stepval {
+  display: inline-block;
+  min-width: 36px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--gold);
+}
+#setup-start { margin-top: 10px; padding: 12px 30px; }
+#setup-note { font-size: 13px; opacity: 0.8; margin-bottom: 0; }
+
+.setup-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+.setup-input {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  flex: 1;
+  min-width: 0;
+}
+.setup-input::placeholder { color: rgba(255,255,255,0.45); }
+
+/* schermata sala d'attesa */
+#waiting {
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  text-align: center;
+  overflow: auto;
+}
+#waiting h2 { color: var(--gold); margin-top: 0; }
+#waiting h2 span { letter-spacing: 4px; font-size: 1.4em; }
+#waiting-players { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+.waiting-player {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  text-align: left;
+}
+#waiting-note { font-size: 13px; opacity: 0.8; margin: 10px 0; }
+
+#game {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#table {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 4px 12px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+/* avversari */
+#opponents {
+  display: flex;
+  flex-wrap: wrap;               /* vanno a capo se non ci stanno */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px 12px;
+  flex: 0 0 auto;
+  max-width: calc(3 * 170px + 2 * 12px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.player {
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 3px 8px;
+  text-align: center;
+  max-width: 170px;              /* le box non si allargano oltre */
+  font-size: clamp(10px, 1.5vh, 13px);
+}
+.player.active { border-color: var(--gold); box-shadow: 0 0 14px rgba(241, 196, 15, 0.6); }
+.pname { font-weight: 700; }
+.pchips { color: var(--gold); }
+.pstatus { margin: 1px 0; opacity: 0.85; min-height: 14px; }
+.pstatus.in { color: #7CFC00; }
+.pstatus.passed { color: #ff8a80; }
+.ptricks { opacity: 0.8; }
+
+/* carte coperte a ventaglio (sovrapposte) per restare compatte */
+.phand { display: flex; justify-content: center; margin: 2px 0; }
+.phand > * { margin-left: calc(var(--card-back) * -0.5); }
+.phand > :first-child { margin-left: 0; }
+.cardback {
+  width: var(--card-back);
+  aspect-ratio: var(--card-ar);
+  border-radius: 4px;
+  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 4px, #5a1515 4px, #5a1515 8px);
+  border: 1px solid #fff3;
+}
+/* dorso come immagine (retro.jpg) per gli avversari */
+.cardback-img {
+  width: var(--card-back);
+  aspect-ratio: var(--card-ar);
+  border-radius: 4px;
+  object-fit: cover;
+  display: block;
+}
+
+/* centro tavolo */
+#center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  min-height: 0;
+  
+  margin: 8px 0;
+  position: relative;
+}
+
+#trick-popup {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: rgba(0, 0, 0, 0.82);
+  color: var(--gold);
+  border-radius: 14px;
+  padding: 14px 32px;
+  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-weight: 800;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 10;
+  white-space: nowrap;
+  text-align: center;
+}
+#trick-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* countdown auto-play */
+#countdown-popup {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(180px, 45vw, 340px);
+  font-weight: 900;
+  color: #ff2020;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 30;
+  user-select: none;
+  text-shadow: 0 0 40px rgba(255,32,32,0.7);
+}
+#countdown-popup.show {
+  animation: countdown-fade 1s ease-out forwards;
+}
+@keyframes countdown-fade {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+}
+
+#briscola { text-align: center; }
+#trick { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; min-height: calc(var(--card-w) * 1.7); align-items: center; max-width: calc(4 * var(--card-w) + 3 * 14px); }
+.trickcard { text-align: center; }
+.trickcard .who { font-size: 11px; opacity: 0.85; margin-bottom: 3px; }
+.trickcard.winner .card { box-shadow: 0 0 0 3px var(--gold), 0 4px 10px rgba(0,0,0,.4); }
+.trickcard.winner .card-img { box-shadow: 0 0 0 3px var(--gold), 0 4px 10px rgba(0,0,0,.4); }
+.assobadge {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--gold);
+  border-radius: 4px;
+  padding: 1px 7px;
+  display: inline-block;
+}
+
+/* carte */
+.card {
+  width: var(--card-w);
+  aspect-ratio: var(--card-ar);
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+.card .rank { font-size: calc(var(--card-w) * 0.42); line-height: 1; }
+.card .suit { font-size: calc(var(--card-w) * 0.42); line-height: 1; }
+.card.empty { color: #aaa; font-size: 30px; justify-content: center; }
+.card.back {
+  color: #fff;
+  font-size: 30px;
+  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 6px, #5a1515 6px, #5a1515 12px);
+}
+
+/* carte avversarie scoperte nel turno alla cieca */
+.phand.revealed { gap: 4px; }
+.phand.revealed .card { width: var(--card-mid); }
+.phand.revealed .card .rank, .phand.revealed .card .suit { font-size: calc(var(--card-mid) * 0.42); }
+
+/* mano umano */
+#me { text-align: center; margin-top: 10px; flex: 0 0 auto; display: flex; flex-direction: column; }
+#myinfo { margin-bottom: 8px; font-size: 15px; flex: 0 0 auto; }
+#myhand { display: flex; justify-content: center; gap: 10px; min-height: calc(var(--card-w) * 1.7); align-items: center; flex-wrap: wrap; max-width: calc(4 * var(--card-w) + 3 * 10px); margin-left: auto; margin-right: auto; }
+#myhand .card-slot { transition: transform .1s; line-height: 0; }
+#myhand .card-slot.playable { cursor: pointer; }
+#myhand .card-slot.playable .card,
+#myhand .card-slot.playable .card-img { outline: 2px solid var(--gold); }
+@media (hover: hover) {
+  #myhand .card-slot.playable:hover { transform: translateY(-10px); }
+}
+#myhand .card-slot.disabled { opacity: 0.45; }
+
+/* carte come immagini (es. carte siciliane) */
+.card-img {
+  width: var(--card-w);
+  aspect-ratio: var(--card-ar);
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  display: block;
+}
+/* il dorso è solo un motivo: riempie senza bande bianche */
+.card-img.back-img { object-fit: cover; }
+.phand.revealed .card-img { width: var(--card-mid); }
+
+#actions { margin-top: 14px; display: flex; justify-content: center; gap: 12px; }
+button {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+button.secondary { background: #ddd; }
+
+#banner {
+  text-align: center;
+  margin: 12px auto 0;
+  max-width: 600px;
+  min-height: 22px;
+  font-size: 15px;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity .2s;
+}
+#banner.show { opacity: 1; }
+
+/* log */
+#log {
+  display: none;
+}
+#log div { opacity: 0.9; }
+
+footer {
+  max-width: 920px;
+  margin: 0 auto 30px;
+  padding: 0 14px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+footer summary { cursor: pointer; color: var(--gold); }
+
+/* vite e stato dei giocatori (gioco a previsioni) */
+.plives { font-size: 14px; color: #ff5a5f; letter-spacing: 1px; margin: 2px 0; }
+.player.eliminated { opacity: 0.4; filter: grayscale(1); }
+
+/* pulsanti dichiarazione */
+.bidlabel { align-self: center; font-size: 14px; opacity: 0.9; margin-right: 4px; }
+button.bidbtn { min-width: 44px; padding: 10px 0; }
+button:disabled, button.forbidden {
+  background: #555; color: #999; cursor: not-allowed; opacity: 0.6;
+}
+button:disabled:hover { filter: none; }
+#actions { flex-wrap: wrap; align-items: center; }

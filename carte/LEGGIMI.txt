@@ -1,0 +1,33 @@
+IMMAGINI DELLE CARTE (es. carte siciliane)
+==========================================
+
+Metti qui i file immagine delle carte. Il gioco li rileva da solo e li usa
+al posto del testo. Se manca un file, quella carta torna a mostrarsi come
+testo (es. "ReO"), quindi puoi anche aggiungerle un po' alla volta.
+
+NOME DEI FILE
+-------------
+  carte/<seme>_<valore>.<ext>
+
+  <seme>   = oro | coppe | spade | bastoni
+  <valore> = 1 2 3 4 5 6 7 8 9 10
+             (8 = Donna, 9 = Cavallo, 10 = Re)
+  <ext>    = png | jpg | jpeg | svg
+             (usa la stessa estensione per tutte le carte)
+
+Esempi:
+  carte/oro_1.png        -> Asso di oro
+  carte/oro_10.png       -> Re di oro
+  carte/coppe_8.png      -> Donna di coppe
+  carte/spade_9.png      -> Cavallo di spade
+  carte/bastoni_7.png    -> Sette di bastoni
+
+DORSO (carta coperta, turno "alla cieca") - opzionale:
+  carte/retro.png
+
+NOTE
+----
+- Servono 40 carte (4 semi x 10 valori).
+- La carta di prova che "accende" la modalita' immagini e' carte/oro_10
+  (il Re di oro): se c'e' quella, il gioco passa alle immagini.
+- Dimensione consigliata: stessa proporzione per tutte (es. ~200x300 px).
