@@ -129,30 +129,22 @@ function getPlayerName() {
   return ($('player-name')?.value || '').trim();
 }
 
-function showSetupNote(msg) {
-  setupNoteEl.textContent = msg;
-  setupNoteEl.style.color = '#e74c3c';
-}
-
 /* ---- Handler pulsanti setup ---- */
 $('setup-start').onclick = () => {
   const name = getPlayerName();
-  if (!name) { showSetupNote('Inserisci il tuo nome per giocare.'); return; }
-  setupNoteEl.textContent = '';
+  if (!name) { alert('Inserisci il tuo nome per giocare.'); return; }
   socket.emit('createRoom', { name, setup, solo: true });
 };
 $('setup-create').onclick = () => {
   const name = getPlayerName();
-  if (!name) { showSetupNote('Inserisci il tuo nome per creare una stanza.'); return; }
-  setupNoteEl.textContent = '';
+  if (!name) { alert('Inserisci il tuo nome per creare una stanza.'); return; }
   socket.emit('createRoom', { name, setup, solo: false });
 };
 $('btn-join').onclick = () => {
   const code = ($('room-code-input')?.value || '').trim().toUpperCase();
   if (!code) return;
   const name = getPlayerName();
-  if (!name) { showSetupNote('Inserisci il tuo nome per unirti.'); return; }
-  setupNoteEl.textContent = '';
+  if (!name) { alert('Inserisci il tuo nome per unirti.'); return; }
   socket.emit('joinRoom', { name, code });
 };
 $('btn-start-room').onclick = () => socket.emit('startGame');

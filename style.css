@@ -102,7 +102,7 @@ header h1 {
   color: var(--gold);
 }
 #setup-start { margin-top: 10px; padding: 12px 30px; }
-#setup-note { font-size: 13px; opacity: 0.8; margin-bottom: 0; }
+#setup-note { font-size: 17px; font-weight: 700; opacity: 1; margin-bottom: 0; }
 
 .setup-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
 .setup-actions button { flex: 1; min-width: 140px; }
@@ -384,10 +384,10 @@ footer summary { cursor: pointer; color: var(--gold); }
 .player.eliminated { opacity: 0.4; filter: grayscale(1); }
 
 /* pulsanti dichiarazione */
-.bidlabel { align-self: center; font-size: 14px; opacity: 0.9; margin-right: 4px; }
+.bidlabel { width: 100%; text-align: center; font-size: 14px; opacity: 0.9; margin-bottom: 6px; }
 button.bidbtn { min-width: 44px; padding: 10px 0; }
 button:disabled, button.forbidden {
   background: #555; color: #999; cursor: not-allowed; opacity: 0.6;
 }
 button:disabled:hover { filter: none; }
-#actions { flex-wrap: wrap; align-items: center; }
+#actions { flex-wrap: wrap; align-items: center; justify-content: center; }
