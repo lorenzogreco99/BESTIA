@@ -224,6 +224,7 @@ io.on('connection', (socket) => {
 
   // Crea una nuova stanza (partita solo o multiplayer)
   socket.on('createRoom', ({ name, setup, solo }) => {
+    if (!name || !name.trim()) { socket.emit('error', 'Inserisci un nome valido.'); return; }
     const code = randomCode();
     const room = {
       code,
@@ -265,6 +266,10 @@ io.on('connection', (socket) => {
     if (room.solo)       { socket.emit('error', 'Stanza non disponibile'); return; }
     if (room.players.length >= room.setup.players) {
       socket.emit('error', 'Stanza piena'); return;
+    }
+    if (!name || !name.trim()) { socket.emit('error', 'Inserisci un nome valido.'); return; }
+    if (room.players.some(p => p.name.toLowerCase() === name.trim().toLowerCase())) {
+      socket.emit('error', 'Nome già in uso in questa stanza.'); return;
     }
 
     const playerIndex = room.players.length;

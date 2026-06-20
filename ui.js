@@ -126,20 +126,34 @@ function renderSetup() {
 }
 
 function getPlayerName() {
-  return ($('player-name')?.value || '').trim() || 'Giocatore';
+  return ($('player-name')?.value || '').trim();
+}
+
+function showSetupNote(msg) {
+  setupNoteEl.textContent = msg;
+  setupNoteEl.style.color = '#e74c3c';
 }
 
 /* ---- Handler pulsanti setup ---- */
 $('setup-start').onclick = () => {
-  socket.emit('createRoom', { name: getPlayerName(), setup, solo: true });
+  const name = getPlayerName();
+  if (!name) { showSetupNote('Inserisci il tuo nome per giocare.'); return; }
+  setupNoteEl.textContent = '';
+  socket.emit('createRoom', { name, setup, solo: true });
 };
 $('setup-create').onclick = () => {
-  socket.emit('createRoom', { name: getPlayerName(), setup, solo: false });
+  const name = getPlayerName();
+  if (!name) { showSetupNote('Inserisci il tuo nome per creare una stanza.'); return; }
+  setupNoteEl.textContent = '';
+  socket.emit('createRoom', { name, setup, solo: false });
 };
 $('btn-join').onclick = () => {
   const code = ($('room-code-input')?.value || '').trim().toUpperCase();
   if (!code) return;
-  socket.emit('joinRoom', { name: getPlayerName(), code });
+  const name = getPlayerName();
+  if (!name) { showSetupNote('Inserisci il tuo nome per unirti.'); return; }
+  setupNoteEl.textContent = '';
+  socket.emit('joinRoom', { name, code });
 };
 $('btn-start-room').onclick = () => socket.emit('startGame');
 $('btn-leave').onclick = () => {

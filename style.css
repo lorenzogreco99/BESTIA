@@ -105,6 +105,7 @@ header h1 {
 #setup-note { font-size: 13px; opacity: 0.8; margin-bottom: 0; }
 
 .setup-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+.setup-actions button { flex: 1; min-width: 140px; }
 .setup-input {
   background: rgba(255,255,255,0.12);
   color: #fff;
