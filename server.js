@@ -287,15 +287,17 @@ io.on('connection', (socket) => {
   socket.on('startGame', () => {
     const room = rooms.get(socket.data.roomCode);
     if (!room || socket.data.playerIndex !== 0 || room.state) return;
+    if (room.players.length < 2) { socket.emit('error', 'Servono almeno 2 giocatori per iniziare.'); return; }
 
-    const state = Bestia.createGame(room.setup.players, room.setup.startCards, room.setup.lives);
+    const actualPlayers = room.players.length;
+    const state = Bestia.createGame(actualPlayers, room.setup.startCards, room.setup.lives);
     // Assegna i nomi dei giocatori umani connessi
     room.players.forEach((rp, i) => {
       state.players[i].name    = rp.name;
       state.players[i].isHuman = true;
     });
     room.state = state;
-    console.log(`[${room.code}] Partita avviata — giocatori: ${room.players.map(p => p.name).join(', ')}`);
+    console.log(`[${room.code}] Partita avviata — ${actualPlayers} giocatori: ${room.players.map(p => p.name).join(', ')}`);
     Bestia.startRound(state);
     emitStateToAll(room);
     driveRoom(room);

@@ -275,7 +275,7 @@ header h1 {
 
 #briscola { text-align: center; }
 #trick { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; min-height: calc(var(--card-w) * 1.7); align-items: center; max-width: calc(4 * var(--card-w) + 3 * 14px); }
-.trickcard { text-align: center; }
+.trickcard { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .trickcard .who { font-size: 11px; opacity: 0.85; margin-bottom: 3px; }
 .trickcard.winner .card { box-shadow: 0 0 0 3px var(--gold), 0 4px 10px rgba(0,0,0,.4); }
 .trickcard.winner .card-img { box-shadow: 0 0 0 3px var(--gold), 0 4px 10px rgba(0,0,0,.4); }
